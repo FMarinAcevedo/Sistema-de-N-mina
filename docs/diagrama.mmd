@@ -1,0 +1,64 @@
+classDiagram
+ class Empleado {
+  <<abstract>>
+  -int id
+  -String nombre
+  -String documento
+  -double salarioBase
+  -LocalDate fechaIngreso
+  -TipoContrato tipoContrato
+  -LocalDate fechaFinalizacion
+  +Empleado(datos)
+  +calcularSalario() double
+  +estaActivo(fecha) boolean
+  +liquidarPersonal(fin, saldos, deducciones) Liquidacion
+ }
+ class EmpleadoAdministrativo {
+  -String cargo
+  -double bonificacion
+  +EmpleadoAdministrativo(datos)
+  +calcularSalario() double
+ }
+ class EmpleadoOperativo {
+  -int horasExtra
+  -double valorHoraExtra
+  +EmpleadoOperativo(datos)
+  +calcularSalario() double
+ }
+ class Nomina {
+  -int id
+  -LocalDate fechaPago
+  -String periodo
+  -List~Empleado~ empleados
+  +Nomina(id, fechaPago, periodo)
+  +getEmpleados() List
+  +agregarEmpleado(empleado) void
+  +calcularNomina() double
+  +generarComprobante(empleado) String
+  +generarInforme() String
+ }
+ class Liquidacion {
+  -int empleadoId
+  -LocalDate fechaFinalizacion
+  -double salarioPendiente
+  -double prestacionesPendientes
+  -double vacacionesPendientes
+  -double deducciones
+  +getTotal() double
+ }
+ class TipoContrato {
+  <<enumeration>>
+  FIJO
+  OBRA_LABOR
+  INDEFINIDO
+ }
+ Empleado <|-- EmpleadoAdministrativo
+ Empleado <|-- EmpleadoOperativo
+ Nomina "0..*" o-- "0..*" Empleado : incluye
+ Empleado --> TipoContrato
+ Empleado ..> Liquidacion : genera
+ note for Empleado "Getters y setters públicos para todos sus atributos"
+ note for EmpleadoAdministrativo "Getters y setters de cargo y bonificacion"
+ note for EmpleadoOperativo "Getters y setters de horasExtra y valorHoraExtra"
+ note for Nomina "Getters y setters de id, fechaPago y periodo"
+ note for Liquidacion "Constructor y getters; resultado inmutable"
